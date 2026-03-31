@@ -1,8 +1,8 @@
-# [Your Project Name Here]
+# [Project One Store]
 
 **CS178: Cloud and Database Systems — Project #1**
-**Author:** [Your Name]
-**GitHub:** [your-username]
+**Author:** [Reys Aden]
+**GitHub:** [ReysAden]
 
 ---
 
