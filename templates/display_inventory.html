@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Users List</title>
+    <!-- Bootstrap CSS for styling the table -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-5">Inventory List</h2>
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="thead-dark"> <!-- creates a dark background for the table header -->
+                <tr>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Category ID</th>
+                </tr>
+            </thead>
+            <tbody> <!-- table body -- loop through all of the inventory items -->
+                {% for item in users %}
+                <tr>
+                    <td>{{ item['ID'] if item['ID'] is not none else item[0] }}</td>
+                    <td>{{ item['description'] if item['description'] is not none else item[1] }}</td>
+                    <td>{{ item['price'] if item['price'] is not none else item[2] }}</td>
+                    <td>{{ item['categoryID'] if item['categoryID'] is not none else item[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+ </body>
+</html>
