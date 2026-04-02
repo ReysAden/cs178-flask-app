@@ -22,3 +22,12 @@ def execute_query(query, args=()):
     rows = cur.fetchall()
     cur.close()
     return rows
+
+def execute_insert(query, args=()):
+    """Executes an INSERT/UPDATE/DELETE query and commits."""
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute(query, args)
+    conn.commit()
+    cur.close()
+    conn.close()

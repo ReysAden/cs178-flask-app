@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Add Inventory Item</title>
+  </head>
+  <body>
+    <h1>Add Inventory Item</h1>
+    <form action="{{ url_for('add_inventory_item') }}" method="post">
+      <label for="description">Description:</label><br />
+      <input type="text" id="description" name="description" required /><br />
+
+      <label for="price">Price:</label><br />
+      <input type="number" step="0.01" id="price" name="price" required /><br />
+
+      <label for="categoryID">Category ID:</label><br />
+      <input type="number" id="categoryID" name="categoryID" required /><br />
+
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

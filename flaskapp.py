@@ -26,6 +26,24 @@ def display_users():
 
     return render_template('display_inventory.html', users=inventory_list)
 
+# Adding an item to the inventory
+@app.route('/add-inventory-item', methods=['GET', 'POST'])
+def add_inventory_item():
+    if request.method == 'POST':
+        # grab form data from the request
+        description = request.form['description']
+        price = request.form['price']
+        category_id = request.form['categoryID']
+        try:
+            # insert new item into the database
+            execute_insert('INSERT INTO Inventory (description, price, categoryID) VALUES (%s, %s, %s)',
+                           (description, price, category_id))
+            flash('Item added successfully!', 'success')
+        except Exception as e:
+            flash(f'Error adding item: {e}', 'danger')
+        return redirect(url_for('home'))
+    # load the add inventory form
+    return render_template('add_inventory_item.html')
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':
