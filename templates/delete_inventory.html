@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Delete Inventory</title>
+  </head>
+  <body>
+    <h1>Delete Inventory</h1>
+    <form action="{{ url_for('delete_inventory') }}" method="post">
+      <label for="description">Item description:</label><br />
+      <input type="text" id="description" name="description" required /><br />
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

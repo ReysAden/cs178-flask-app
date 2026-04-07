@@ -31,3 +31,4 @@ def execute_insert(query, args=()):
     conn.commit()
     cur.close()
     conn.close()
+    

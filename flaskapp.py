@@ -45,6 +45,26 @@ def add_inventory_item():
     # load the add inventory form
     return render_template('add_inventory_item.html')
 
+
+# deleting an item in the inventory
+@app.route('/delete-inventory',methods=['GET', 'POST'])
+def delete_inventory():
+    if request.method == 'POST':
+        # Extract form data
+        description = request.form['description']
+        
+        try:
+            # Delete the item from the database
+            execute_insert('DELETE FROM Inventory WHERE description = %s', (description,))
+            flash('Item deleted successfully!', 'success')
+        except Exception as e:
+            flash(f'Error deleting item: {e}', 'danger')
+        # Redirect to home page or another page upon successful submission
+        return redirect(url_for('home'))
+    else:
+        # Render the form page if the request method is GET
+        return render_template('delete_inventory.html')
+
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
