@@ -47,7 +47,7 @@ def add_inventory_item():
 
 
 # deleting an item in the inventory
-@app.route('/delete-inventory',methods=['GET', 'POST'])
+@app.route('/delete-inventory-item',methods=['GET', 'POST'])
 def delete_inventory():
     if request.method == 'POST':
         # Extract form data
@@ -64,6 +64,30 @@ def delete_inventory():
     else:
         # Render the form page if the request method is GET
         return render_template('delete_inventory.html')
+    
+# Update an item in the inventory
+@app.route('/update-inventory-item',methods=['GET', 'POST'])
+def update_inventory():
+    if request.method == 'POST':
+        # Extract form data
+        current_description = request.form['current_description']
+        new_description = request.form['new_description']
+        price = request.form['price']
+        category_id = request.form['categoryID']
+        
+        try:
+            # Update the item in the database
+            execute_insert('UPDATE Inventory SET description = %s, price = %s, categoryID = %s WHERE description = %s',
+                           (new_description, price, category_id, current_description))
+            flash('Item updated successfully!', 'success')
+        except Exception as e:
+            flash(f'Error updating item: {e}', 'danger')
+        # Redirect to home page or another page upon successful submission
+        return redirect(url_for('home'))
+    else:
+        # Render the form page if the request method is GET
+        return render_template('update_inventory.html')
+
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':

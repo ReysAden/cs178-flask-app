@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Update Inventory</title>
+  </head>
+  <body>
+    <h1>Update Inventory</h1>
+    <form action="{{ url_for('update_inventory') }}" method="post">
+      <label for="current_description">Current Item Description:</label><br />
+      <input type="text" id="current_description" name="current_description" required /><br />
+      <label for="new_description">New Description:</label><br />
+      <input type="text" id="new_description" name="new_description" required /><br />
+      <label for="price">Price:</label><br />
+      <input type="number" step="0.01" id="price" name="price" required /><br />
+      <label for="categoryID">Category ID:</label><br />
+      <input type="number" id="categoryID" name="categoryID" required /><br />
+      <input type="submit" value="Update" />
+    </form>
+  </body>
+</html>
