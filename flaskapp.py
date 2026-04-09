@@ -87,7 +87,46 @@ def update_inventory():
     else:
         # Render the form page if the request method is GET
         return render_template('update_inventory.html')
+    
+# Reviews
+@app.route('/add-review', methods=['GET', 'POST'])
+def add_review_route():
+    if request.method == 'POST':
+        item_description = request.form['itemDescription']
+        reviewer_name = request.form['reviewerName']
+        rating = request.form['rating']
+        comment = request.form['comment']
+        try:
+            add_review(item_description, reviewer_name, rating, comment)
+            flash('Review added successfully!', 'success')
+        except Exception as e:
+            flash(f'Error adding review: {e}', 'danger')
+        return redirect(url_for('home'))
+    return render_template('add_review.html')
 
+@app.route('/view-reviews', methods=['GET', 'POST'])
+def view_reviews_route():
+    reviews = []
+    if request.method == 'POST':
+        item_description = request.form['itemDescription']
+        try:
+            reviews = get_reviews(item_description)
+        except Exception as e:
+            flash(f'Error fetching reviews: {e}', 'danger')
+    return render_template('view_reviews.html', reviews=reviews)
+
+@app.route('/display-inventory-with-category')
+def display_inventory_with_category():
+    try:
+        inventory_list = execute_query('''
+            SELECT Inventory.ID, Inventory.description, Inventory.price, Category.name AS categoryName
+            FROM Inventory
+            JOIN Category ON Inventory.categoryID = Category.categoryID
+        ''')
+    except Exception as e:
+        flash(f'Error loading inventory: {e}', 'danger')
+        inventory_list = []
+    return render_template('display_inventory_join.html', inventory=inventory_list)
 
 # these two lines of code should always be the last in the file
 if __name__ == '__main__':
