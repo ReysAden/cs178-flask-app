@@ -8,7 +8,7 @@
 
 ## Overview
 
-<!-- Describe your project in 2-4 sentences. What does it do? Who is it for? What problem does it solve? -->
+Project One Store  inventory management system built with Flask and hosted on AWS. It allows users to add, update, delete, and view inventory items stored in a MySQL relational database. It also supports product reviews stored in DynamoDB, allowing customers to leave feedback on items.
 
 ---
 
@@ -26,13 +26,19 @@
 
 ```
 ProjectOne/
-├── flaskapp.py          # Main Flask application — routes and app logic
-├── dbCode.py            # Database helper functions (MySQL connection + queries)
-├── creds_sample.py      # Sample credentials file (see Credential Setup below)
+├── flaskapp.py                     # Main Flask application — routes and app logic
+├── dbCode.py                       # Database helper functions (MySQL + DynamoDB)
+├── creds_sample.py                 # Sample credentials file
 ├── templates/
-│   ├── home.html        # Landing page
-│   ├── [other].html     # Add descriptions for your other templates
-├── .gitignore           # Excludes creds.py and other sensitive files
+│   ├── home.html                   # Landing page with navigation buttons
+│   ├── add_inventory_item.html     # Form to add a new inventory item
+│   ├── delete_inventory.html       # Form to delete an inventory item
+│   ├── update_inventory.html       # Form to update an inventory item
+│   ├── display_inventory.html      # Table displaying all inventory items
+│   ├── display_inventory_join.html # Table displaying inventory with category names
+│   ├── add_review.html             # Form to add a product review
+│   └── view_reviews.html           # Page to search and view product reviews
+├── .gitignore                      # Excludes creds.py and other sensitive files
 └── README.md
 ```
 
@@ -70,7 +76,7 @@ ProjectOne/
 The app is deployed on an AWS EC2 instance. To view the live version:
 
 ```
-http://[your-ec2-public-ip]:8080
+http://ec2-54-146-168-28.compute-1.amazonaws.com:8080/view-reviews
 ```
 
 _(Note: the EC2 instance may not be running after project submission.)_
@@ -97,42 +103,46 @@ db = "your-database-name"
 
 ### SQL (MySQL on RDS)
 
-<!-- Briefly describe your relational database schema. What tables do you have? What are the key relationships? -->
 
-**Example:**
+The relational database contains two tables:
 
-- `[TableName]` — stores [description]; primary key is `[key]`
-- `[TableName]` — stores [description]; foreign key links to `[other table]`
+- `Inventory` — stores inventory items; primary key is `ID` (auto-incremented); attributes are `description`, `price`, and `categoryID`
+- `Category` — stores category names; primary key is `categoryID`; attributes are `name`
 
-The JOIN query used in this project: <!-- describe it in plain English -->
+`Inventory.categoryID` is a foreign key that references `Category.categoryID`.
+
+The JOIN query used in this project joins `Inventory` and `Category` on `categoryID` to display each inventory item alongside its human-readable category name instead of just a numeric ID.
+
 
 ### DynamoDB
 
-<!-- Describe your DynamoDB table. What is the partition key? What attributes does each item have? How does it connect to the rest of the app? -->
-
-- **Table name:** `[your-table-name]`
-- **Partition key:** `[key-name]`
-- **Used for:** [description]
+- **Table name:** `ProductReviews`
+- **Partition key:** `itemDescription` (String)
+- **Attributes:** `reviewerName`, `rating`, `comment`
+- **Used for:** Storing customer reviews for inventory items. Users can submit a review for any item by description and look up all reviews for a given item.
 
 ---
 
 ## CRUD Operations
 
-| Operation | Route      | Description    |
-| --------- | ---------- | -------------- |
-| Create    | `/[route]` | [what it does] |
-| Read      | `/[route]` | [what it does] |
-| Update    | `/[route]` | [what it does] |
-| Delete    | `/[route]` | [what it does] |
-
+| Operation | Route | Description |
+|-----------|-------|-------------|
+| Create | `/add-inventory-item` | Adds a new item to the Inventory table |
+| Read | `/display-inventory-items` | Displays all inventory items |
+| Read (JOIN) | `/display-inventory-with-category` | Displays inventory items with category names via SQL JOIN |
+| Update | `/update-inventory-item` | Updates description, price, and category of an existing item |
+| Delete | `/delete-inventory-item` | Deletes an item from inventory by description |
+| Create (DynamoDB) | `/add-review` | Adds a product review to DynamoDB |
+| Read (DynamoDB) | `/view-reviews` | Retrieves all reviews for a given item from DynamoDB |
 ---
 
 ## Challenges and Insights
 
-<!-- What was the hardest part? What did you learn? Any interesting design decisions? -->
+One challenge was managing credentials securely across local development and EC2. Since `creds.py` is excluded from GitHub via `.gitignore`, it had to be manually configured on the EC2 instance separately from the GitHub deployment pipeline.
 
+Setting up DynamoDB required creating a dedicated IAM user (`ProjectOneUser`) with `AmazonDynamoDBFullAccess` permissions and using its access keys in the app via boto3. This was a good introduction to AWS IAM and how access control works in practice.
 ---
 
 ## AI Assistance
 
-<!-- List any AI tools you used (e.g., ChatGPT) and briefly describe what you used them for. Per course policy, AI use is allowed but must be cited in code comments and noted here. -->
+Claude (Anthropic) was used to help debug connection errors between the Flask app, RDS, and DynamoDB. All fixes were reviewed and applied manually.
